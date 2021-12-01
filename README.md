@@ -72,4 +72,7 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 =======
 # form-cadastro
 >>>>>>> c7e5a33da06cfa656ec0b4e61d3115405245f79e
+<<<<<<< HEAD
 
+=======
+>>>>>>> e12c39c5c980c0c805aea010a5c4314c5b48513f
