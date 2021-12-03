@@ -1,104 +1,47 @@
-import React, {useState} from 'react';
-import { TextField, Button, Switch, FormControlLabel} from "@material-ui/core";
+import React, { useEffect, useState } from 'react';
+import DadosPessoais from './DadosPessoais';
+import DadosUsuario from './DadosUsuario';
+import DadosEntrega from './DadosEntrega';
+import { Step, Stepper, Typography, StepLabel } from '@material-ui/core';
 
+function FormularioCadastro({ aoEnviar }) {
+    const [etapaAtual, setEtapaAtual] = useState(0);
+    const [dadosColetados, setDados] = useState({});
 
-function FormularioCadastro({aoEnviar, validarCPF}) {
+    useEffect(() => {
+        if (etapaAtual === formularios.length){
+            console.log(dadosColetados);
+        }
+        
+    })
 
-    const [nome, setNome] = useState("");
-    const [sobrenome, setSobrenome] = useState("");
-    const [cpf, setCpf] = useState("");
-    const [promocoes, setPromocoes] = useState(true);
-    const [novidades, setNovidades] = useState(true);
-    const [erros, setErros] = useState({cpf:{valido: true, texto:""}});
+    const formularios = [
+        <DadosUsuario aoEnviar={coletaDados}/>, 
+        <DadosPessoais aoEnviar={coletaDados}/>, 
+        <DadosEntrega aoEnviar={coletaDados}/>,
+        <Typography variant="h5">Obrigado pelo Cadastro</Typography>
+    ];
+
+    function coletaDados(dados) {
+        setDados({...dadosColetados,...dados});
+        proximo();
+    }
+
+    function proximo(){
+        setEtapaAtual(etapaAtual+1);
+    }
 
     return (
-        <form
-            onSubmit={(event)=>{
-                event.preventDefault();
-                console.log({nome, sobrenome, cpf, promocoes, novidades});
-                aoEnviar({nome, sobrenome, cpf, novidades, promocoes})
-            }}
-        >
-            
-            <TextField
-                value={nome}
-                onChange={(event) => {
-                    setNome(event.target.value);
-                }}
-                id="nome" 
-                label="Nome" 
-                variant="outlined" 
-                margin="normal" 
-                fullWidth
-            />
-           
-            <TextField
-                value={sobrenome}
-                onChange={(event) => {
-                    setSobrenome(event.target.value);
-                }}
-                id="sobrenome" 
-                label="Sobrenome" 
-                variant="outlined" 
-                margin="normal"
-                fullWidth
-            />
-          
-            <TextField
-                value={cpf}
-                onChange={(event) => {
-                    setCpf(event.target.value);
-                }}
-
-                onBlur={(event) => {
-                    const ehValido = validarCPF(cpf);
-                    setErros({cpf:ehValido})
-                    }
-                }
-                id="cpf"
-                label="CPF" 
-                variant="outlined" 
-                margin="normal" 
-                fullWidth
-                error= {!erros.cpf.valido}
-                helperText={erros.cpf.texto}
-            />
-        
-            <FormControlLabel 
-                label="Promoções" 
-                control={
-                    <Switch
-                        checked={promocoes} 
-                        onChange={(event) => {
-                            setPromocoes(event.target.checked)
-                        }} 
-                        name="promocoes"
-                        color="primary"
-                    />
-                }
-            />
-
-            <FormControlLabel 
-                label="Novidades" 
-                control={
-                    <Switch 
-                        checked={novidades}
-                        onChange={(event) => {
-                            setNovidades(event.target.checked)
-                        }} 
-                        name="novidades" 
-                        color="primary"
-                    />
-                }
-            />
-            
-            <Button 
-                variant="contained" 
-                color="primary" 
-                type="submit">
-                Cadastrar
-            </Button>
-        </form>
+        <>
+            <Stepper activeStep={etapaAtual}>
+                <Step><StepLabel>Login</StepLabel></Step>
+                <Step><StepLabel>Dados Pessoais</StepLabel></Step>
+                <Step><StepLabel>Dados de Entrega</StepLabel></Step>
+                <Step><StepLabel>Finalização</StepLabel></Step>
+            </Stepper>
+            {formularios[etapaAtual]}
+        </>
+       
     );
 
 }
